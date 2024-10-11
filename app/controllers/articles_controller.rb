@@ -1,14 +1,13 @@
 class ArticlesController < ApplicationController
-    before_action :authenticate_user!, only: [ :create, :new, :destroy ]
+    before_action :authenticate_user!, only: [ :create, :edit, :new, :destroy, :update ]
+    before_action :add_article, only: [ :edit, :show, :destroy, :update ]
 
     def index
-      puts current_user
-      @user = current_user
       @articles = Article.all.order(created_at: :desc)
     end
 
     def new
-      @article = current_user.articles.build
+      @article = Article.new
     end
 
     def create
@@ -21,12 +20,20 @@ class ArticlesController < ApplicationController
     end
 
     def show
-      @article = Article.find(params[:id])
+    end
+
+    def update
+      if @article.update(article_params)
+        redirect_to @article, notice: "Comment was successfully updated."
+      else
+        render :edit
+      end
+    end
+
+    def edit
     end
 
     def destroy
-        @article = Article.find(params[:id])
-
         if @article.user == current_user
           @article.destroy
           redirect_to articles_path, notice: "Article was successfully deleted."
@@ -39,5 +46,9 @@ class ArticlesController < ApplicationController
 
     def article_params
       params.require(:article).permit(:title, :body)
+    end
+
+    def add_article
+      @article = Article.find(params[:id])
     end
 end

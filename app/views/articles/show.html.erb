@@ -46,11 +46,13 @@
 </div>
 
 
-<div class='my-2'>Make a comment: </div>
+<% if user_signed_in?%>
+  <div class='my-2'>Make a comment: </div>
 <%= form_with(model: [ @article, Comment.new ],class:'w-[60%] gap-y-2 my-2 flex flex-col justify-end') do |form| %>
   <%= form.text_area :content, rows: 4,class: 'rounded-lg border border-neutral-300' %>
   <%= form.submit 'Add Comment',class: 'bg-black text-white p-2' %>
 <% end %>
+<%end%>
 
 
 <div class="flex justify-stretch gap-2 w-[40%]">

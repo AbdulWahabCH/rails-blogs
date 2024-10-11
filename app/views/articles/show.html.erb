@@ -1,0 +1,68 @@
+<div class='w-full mx-auto'>
+<div class='mx-10'>
+<h1 class="text-3xl font-bold mb-4"><%= @article.title.upcase_first %></h1>
+<div class='flex gap-4 my-4'>
+  <%= image_tag @article.user.avatar.variant(resize_to_fill: [50, 50]) , class: "rounded-full"%>
+  <div class="flex flex-col justify-start">
+<p ><%= link_to @article.user.username.upcase_first, user_path(@article.user) %></p>
+<span class="opacity-50"><%= @article.created_at.strftime('%b %-d %Y')%></span>
+</div>
+ </div>
+
+<div class="mb-6">
+  <p class="text-gray-700"><%= @article.body.upcase_first %></p>
+</div>
+
+<div class='flex flex-col gap-y-2'> 
+  <%if @article.comments.any?%>
+  <h2 class='text-2xl font-semibold'>Comments: <%= @article.comments.count%></h2>
+  <%end%>
+
+
+  <div class="bg-neutral-100/50 p-4 rounded-md">
+    <% @article.comments.each do |comment| %>
+  <div class='flex gap-2 my-2 bg-neutral-200/50 p-4 rounded-lg'>
+     <%= image_tag comment.user.avatar.variant(resize_to_fill: [40, 40]) , class: "rounded-full h-14"%>
+    <div class="flex flex-col items-start">
+    <p><strong><%= comment.user.username.upcase_first %>:</strong></p>
+    
+    <% if user_signed_in? && comment.user == current_user %>
+     <span class="flex gap-2">
+
+       <%= link_to 'Edit', edit_article_comment_path(@article, comment), class: 'underline underline-offset-2' %>
+      <%= link_to 'Delete', article_comment_path(@article, comment),data: {turbo_method: :delete,turbo_confirm: "Are you sure to delete this comment?"}, class: 'underline underline-offset-2 text-red-700' %>
+     </span>
+
+    <% end %>
+
+    <span class=""><%= comment.content %></span>
+
+    </div>
+  </div>
+  <% end %>
+  </div>
+
+
+</div>
+
+
+<div class='my-2'>Make a comment: </div>
+<%= form_with(model: [ @article, Comment.new ],class:'w-[60%] gap-y-2 my-2 flex flex-col justify-end') do |form| %>
+  <%= form.text_area :content, rows: 4,class: 'rounded-lg border border-neutral-300' %>
+  <%= form.submit 'Add Comment',class: 'bg-black text-white p-2' %>
+<% end %>
+
+
+<div class="flex justify-stretch gap-2 w-[40%]">
+  <%= link_to 'Back to Articles', articles_path, class: 'px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400' %>
+
+  <%if user_signed_in? && @article.user == current_user%>
+    <%= link_to 'Edit Article', edit_article_path(@article), class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600' %>
+  
+  <%= link_to 'Delete Article', article_path(@article), data: { turbo_method: :delete,
+  turbo_confirm: "Are you sure?"}, class: 'px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600' %>
+  <%end%>
+</div>
+
+</div>
+</div>

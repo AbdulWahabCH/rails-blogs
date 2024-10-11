@@ -66,3 +66,5 @@ gem "erb-linter", "~> 0.2.1"
 gem "aws-sdk-s3", require: false
 
 gem "dotenv-rails", groups: [ :development, :test ]
+
+gem "pg"

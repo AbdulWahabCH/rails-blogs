@@ -4,13 +4,22 @@ class CommentsController < ApplicationController
   def show
   end
   def update
-    @article = Article.find(params[:article_id])
-    @comment = @article.comments.find(params[:id])
-    if @comment.update(comment_params)
-      redirect_to @article, notice: "Comment was successfully updated."
-    else
-      render :edit
-    end
+      if @comment.update(comment_params)
+        respond_to do |format|
+          format.html { redirect_to @article }
+          format.json { render json: @comment }
+          format.turbo_stream
+        end
+      else
+        render :edit
+      end
+    # @article = Article.find(params[:article_id])
+    # @comment = @article.comments.find(params[:id])
+    # if @comment.update(comment_params)
+    #   redirect_to @article, notice: "Comment was successfully updated."
+    # else
+    #   render :edit
+    # end
   end
 
   def create

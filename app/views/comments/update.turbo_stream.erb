@@ -1,0 +1,7 @@
+<%# app/views/comments/update.turbo_stream.erb %>
+<%= turbo_stream.replace "comment-#{@comment.id}" do %>
+  <div id="comment-<%= @comment.id %>">
+    <p class="comment-text"><%= @comment.content %></p>
+    <%= link_to 'Edit', '#', class: 'edit-comment-link', data: { comment_id: @comment.id } %>
+  </div>
+<% end %>

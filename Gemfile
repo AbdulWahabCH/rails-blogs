@@ -68,3 +68,5 @@ gem "aws-sdk-s3", require: false
 gem "dotenv-rails", groups: [ :development, :test ]
 
 gem "pg"
+
+gem "rubocop-rails", require: false

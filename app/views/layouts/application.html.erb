@@ -15,7 +15,8 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= javascript_importmap_tags%>
+
   </head>
 
   <body>
@@ -50,9 +51,11 @@
      
     </nav>
     <main class="container mx-auto  ">
-    <p class="notice"><%= notice %></p>
-       <p class="alert"><%= alert %></p>
+    <div id="flash-messages"  class="transition-opacity duration-700 ease-in-out opacity-0">
+      <p class="notice"><%= notice %></p>
 
+    <p class="alert"><%= alert %></p>
+  </div>
       <%= yield %>
     </main>
   </body>

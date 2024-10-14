@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!, only: [ :create, :edit, :update, :destroy ]
-  before_action :set_comment, except: [ :new ]
+  before_action :set_comment, except: [ :new, :create ]
   def show
   end
   def update
@@ -29,6 +29,7 @@ class CommentsController < ApplicationController
     @comment = @article.comments.find(params[:id])
     if @comment.user == current_user
       @comment.destroy
+      flash[:alert] = "Comment is deleted"
       redirect_back(fallback_location: root_path)
     end
   end

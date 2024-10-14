@@ -38,45 +38,52 @@
                         <%= comment.user.username.upcase_first %>:
                       </p>
 
-                      <% if user_signed_in? && comment.user==current_user %>
-                        <span class="flex gap-2 text-xs font-medium">
-                          <div class="flex flex-col gap-2">
-                            <div id="comment-<%= comment.id %>" class="comment">
+                      <p class="text-xs text-gray-500">
+                        <%= time_ago_in_words(comment.created_at) %> ago
+                          <% if comment.updated_at> comment.created_at %>
+                            (Updated <%= time_ago_in_words(comment.updated_at) %> ago)
+                              <% end %>
+                      </p>
 
-                              <div class="flex gap-2">
-                                <%= link_to 'Edit' , '#' , class: 'edit-comment-link underline underline-offset-2' ,
-                                  data: { comment_id: comment.id } %>
-                                  <%= link_to 'Delete' , article_comment_path(@article, comment), data: { turbo_method:
-                                    :delete, turbo_confirm: "Are you sure to delete this comment?" },
-                                    class: 'underline underline-offset-2 text-red-700' %>
-                              </div>
-
-                              <p class="comment-text font-normal text-base">
-                                <%= comment.content %>
-                              </p>
-                            </div>
-
-                            <div id="edit-comment-form-<%= comment.id %>" class="edit-comment-form"
-                              style="display: none;">
-                              <%= form_with(model: [@article, comment], local: false, html: {
-                                id: "edit-form-#{comment.id}" ,class:'flex flex-col gap-2 my-2' }) do |form| %>
-                                <%= form.text_area :content, value: comment.content,
-                                  class: 'border-2 rounded-lg shadow-inner' %>
-                                  <div class="flex flex-row gap-2">
-                                    <%= form.submit 'Update' ,
-                                      class: 'update-button underline underline-offset-2 cursor-pointer' %>
-                                      <%= link_to 'Cancel' , '#' ,
-                                        class: 'cancel-edit underline underline-offset-2 cursor-pointer' %>
-                                  </div>
-
-                                  <% end %>
-                            </div>
+                      <span class="flex gap-2 text-xs font-medium">
+                        <div class="flex flex-col gap-2">
+                          <div id="comment-<%= comment.id %>" class="comment">
+                            <p class="comment-text font-normal text-base">
+                              <%= comment.content %>
+                            </p>
                           </div>
-                        </span>
-                        <% end %>
+
+                          <% if user_signed_in? && comment.user==current_user %>
+                            <div class="flex gap-2">
+                              <%= link_to 'Edit' , '#' , class: 'edit-comment-link underline underline-offset-2' , data:
+                                { comment_id: comment.id } %>
+                                <%= link_to 'Delete' , article_comment_path(@article, comment), data: { turbo_method:
+                                  :delete, turbo_confirm: "Are you sure to delete this comment?" },
+                                  class: 'underline underline-offset-2 text-red-700' %>
+                            </div>
+                            <% end %>
+
+                              <div id="edit-comment-form-<%= comment.id %>" class="edit-comment-form"
+                                style="display: none;">
+                                <%= form_with(model: [@article, comment], local: false, html: {
+                                  id: "edit-form-#{comment.id}" , class: 'flex flex-col gap-2 my-2' }) do |form| %>
+                                  <%= form.text_area :content, value: comment.content,
+                                    class: 'border-2 rounded-lg shadow-inner' %>
+                                    <div class="flex flex-row gap-2">
+                                      <%= form.submit 'Update' ,
+                                        class: 'update-button underline underline-offset-2 cursor-pointer' %>
+                                        <%= link_to 'Cancel' , '#' ,
+                                          class: 'cancel-edit underline underline-offset-2 cursor-pointer' %>
+                                    </div>
+                                    <% end %>
+                              </div>
+                        </div>
+                      </span>
                     </div>
                   </div>
               </div>
+
+
               <% end %>
           </div>
     </div>

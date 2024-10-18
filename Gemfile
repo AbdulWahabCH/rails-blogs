@@ -17,8 +17,9 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis", ">= 4.0.1"
 
+gem "mail", "~> 2.8"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
@@ -44,6 +45,7 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem "letter_opener"
 end
 
 group :development do
@@ -70,3 +72,14 @@ gem "dotenv-rails", groups: [ :development, :test ]
 gem "pg"
 
 gem "rubocop-rails", require: false
+
+gem "byebug", "~> 11.1"
+
+gem "cancancan", "~> 3.6"
+
+gem "font-awesome-rails", "~> 4.7"
+
+gem "whenever", require: false
+
+# gem "sidekiq", "~> 7.0"
+gem "resque", "~> 2.6"

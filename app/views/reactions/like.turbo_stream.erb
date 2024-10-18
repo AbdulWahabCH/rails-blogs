@@ -1,0 +1,38 @@
+<%= turbo_stream.replace 'reaction_status' do %>
+    <div id="reaction_status" class="flex flex-row gap-x-2">
+    
+
+        <div class="flex flex-col">
+
+        <% if @reactable.is_a?(Article) %>
+  <!-- Render Article-specific UI -->
+                  <% if @article.reactions.where(user: current_user, reaction_type: 'like' ).exists? %>
+                    <%= link_to 'UnLike' , unlike_reactions_path(reactable_type: 'Article' , reactable_id: @article.id),
+                        data: { turbo_method: :delete }, class: 'like_button' %>
+                        <% else %>
+                            <%= link_to 'like' , like_reactions_path(reactable_type: 'Article' , reactable_id:
+                                @article.id), data: { turbo_method: :delete }, class: 'like_button' %>
+                                <% end %>
+
+<% elsif @reactable.is_a?(Comment) %>
+  <!-- Render Comment-specific UI -->
+
+
+                                        <% if @comment.reactions.where(user: current_user, reaction_type: 'like'
+                                            ).exists? %>
+                                            <%= link_to 'UnLike' , unlike_reactions_path(reactable_type: 'Comment' ,
+                                                reactable_id: @comment.id), data: { turbo_method: :delete },
+                                                class: 'like_button' %>
+                                                <% else %>
+                                                    <%= link_to 'like' ,
+                                                        like_reactions_path(reactable_type: 'Comment' , reactable_id:
+                                                        @comment.id), data: { turbo_method: :delete },
+                                                        class: 'like_button' %>
+                                                        <% end %>
+                                   
+<% end %>
+
+         
+        </div>
+    </div>
+    <% end %>

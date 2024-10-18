@@ -27,6 +27,15 @@ class CommentsController < ApplicationController
     @comment = @article.comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
+      notification = Notification.build(
+       user: @comment.article.user,
+       actor: current_user,
+       notifiable: @comment,
+       action: :commented
+     )
+     notification.save
+
+      # Notification.create_notification(@comment.article.user, current_user, @comment, :commented)
       redirect_to @article, notice: "Comment was successfully created."
     else
       redirect_to @article, alert: "Error creating comment."

@@ -83,3 +83,5 @@ gem "whenever", require: false
 
 # gem "sidekiq", "~> 7.0"
 gem "resque", "~> 2.6"
+
+gem "jwt"

@@ -1,0 +1,104 @@
+<div class='flex gap-2 my-2 bg-neutral-200/50 p-4 rounded-lg'>
+    <%= image_tag comment.user.avatar.variant(resize_to_fill: [30, 30]), class: "rounded-full h-14" %>
+        <div class="flex flex-col items-start">
+            <div>
+                <div class="flex gap-x-1 items-center">
+                    <p class="text-sm font-semibold">
+                        <%= comment.user.username.upcase_first %>:
+                    </p>
+
+                    <p class="text-xs text-gray-500">
+                        <%= time_ago_in_words(comment.created_at) %> ago
+                            <% if comment.updated_at> comment.created_at %>
+                                (Updated <%= time_ago_in_words(comment.updated_at) %> ago)
+                                    <% end %>
+                    </p>
+                </div>
+                <!-- like and unlike functionality for the comments -->
+
+                <div class="text-xs font-bold text-neutral-800">
+                    <% if user_signed_in? %>
+                        <div id="reaction_status" class="flex flex-row gap-x-2 ">
+                            <div class="flex flex-row ">
+                                <% if comment.reactions.where(user: current_user, reaction_type: 'like' ).exists? %>
+                                    <div class="flex flex-col liked gap-2">
+                                        <%= link_to 'UnLike' , unlike_reactions_path(reactable_type: 'Comment' ,
+                                            reactable_id: comment.id), data: { turbo_method: :delete },
+                                            class: 'unlike_button' %>
+                                    </div>
+                                    <% elsif comment.reactions.where(user: current_user, reaction_type: 'unlike'
+                                        ).exists? %>
+                                        <div class="flex flex-col gap-2 disliked">
+                                            <%= link_to 'Like' , like_reactions_path(reactable_type: 'Comment' ,
+                                                reactable_id: comment.id), data: { turbo_method: :post },
+                                                class: 'like_button' %>
+                                        </div>
+                                        <% else %>
+                                            <div class="flex flex-row gap-x-2 ">
+                                                <div class="cursor-pointer hover:text-green-900	">
+                                                    <%= link_to 'Like' , like_reactions_path(reactable_type: 'Comment' ,
+                                                        reactable_id: comment.id), data: { turbo_method: :post },
+                                                        class: 'like_button' %>
+                                                </div>
+                                                <span> : </span>
+                                                <div class="cursor-pointer">
+                                                    <%= link_to 'Unlike' ,
+                                                        unlike_reactions_path(reactable_type: 'Comment' , reactable_id:
+                                                        comment.id), data: { turbo_method: :post },
+                                                        class: 'unlike_button' %>
+                                                </div>
+                                            </div>
+                                            <% end %>
+                            </div>
+                        </div>
+                        <%else%>
+                            <div class="flex flex-row gap-2">
+                                <%= comment.reactions.where(reaction_type: 'like' ).count %> people liked
+                                    <span> : </span>
+                                    <%= comment.reactions.where(reaction_type: 'unlike' ).count %> people unliked
+
+                            </div>
+                            <%end%>
+                </div>
+
+
+                <span class="flex gap-2 text-xs font-medium">
+                    <div class="flex flex-col gap-2">
+                        <div id="comment-<%= comment.id %>" class="comment">
+                            <p class="comment-text font-normal text-base">
+                                <%= comment.content %>
+                            </p>
+                        </div>
+
+                        <% if user_signed_in? && comment.user==current_user %>
+                            <div class="flex gap-2">
+                                <%= link_to 'Edit' , '#' , class: 'edit-comment-link underline underline-offset-2' ,
+                                    data: { comment_id: comment.id } %>
+                                    <%= link_to 'Delete' , article_comment_path(@article, comment), data: {
+                                        turbo_method: :delete, turbo_confirm: "Are you sure to delete this comment?" },
+                                        class: 'underline underline-offset-2 text-red-700' %>
+                            </div>
+                            <% end %>
+                                <div id="edit-comment-form-<%= comment.id %>" class="edit-comment-form"
+                                    style="display: none;">
+                                    <%= form_with(model: comment, url: article_comment_path(@article, comment), method:
+                                        :patch, html: { id: "edit-form-#{comment.id}" ,
+                                        class: 'flex flex-col gap-2 my-2 w-full' }) do |form| %>
+                                        <%= form.text_area :content, value: comment.content,
+                                            class: 'border-2 rounded-lg shadow-inner' %>
+                                            <div class="flex flex-row gap-2">
+                                                <%= form.submit 'Update' ,
+                                                    class: 'update-button underline underline-offset-2 cursor-pointer'
+                                                    %>
+                                                    <%= link_to 'Cancel' , '#' ,
+                                                        class: 'cancel-edit underline underline-offset-2 cursor-pointer'
+                                                        %>
+                                            </div>
+                                            <% end %>
+
+                                </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+</div>

@@ -16,7 +16,9 @@ class User < ApplicationRecord
 
     enum role: { user: 0, admin: 1 }
 
-
+    def admin?
+      role == "admin"
+    end
     validates :username, presence: true, uniqueness: true
     validates :email, presence: true, uniqueness: true
     validates :password, presence: true, length: { minimum: 8 }

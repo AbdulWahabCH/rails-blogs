@@ -1,4 +1,6 @@
 class Notification < ApplicationRecord
+  include ActionView::Helpers::DateHelper
+
   belongs_to :user
   belongs_to :actor, polymorphic: true
   belongs_to :notifiable, polymorphic: true
@@ -11,7 +13,7 @@ class Notification < ApplicationRecord
   validates :action, presence: true
   validates :notifiable, presence: true
 
-
+  # this feature is pending
   # def self.create_notification(invited, current, notify, action_done)
   #   notification = Notification.build(
   #     user: invited,
@@ -29,6 +31,12 @@ class Notification < ApplicationRecord
   private
 
   def broadcast_notification
-    NotificationChannel.broadcast_to(user, { message: "#{self.actor.username} ---------- has -------- #{self.action} on your post", status: self.status })
+    NotificationChannel.broadcast_to(user, {
+      message: "#{self.actor.username} has #{self.action} on your post",
+      actor_username: self.actor.username,
+      action: self.action,
+      time_ago: time_ago_in_words(self.created_at),
+      status: self.status
+    })
   end
 end

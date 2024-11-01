@@ -37,7 +37,7 @@
 
 <body>
   <nav class='mx-4 my-6 px-2 flex justify-between items-center'>
-    <div class="flex items-center">
+    <div class="flex gap-2 items-center">
       <%if user_signed_in?%>
 
         <% if current_user.avatar.attached? %>
@@ -48,9 +48,14 @@
               <% end %>
 
 
-                <div class=''><span class=' p-2  rounded-md font-bold'>
-                    <%= link_to current_user.username.upcase_first,edit_user_registration_path%>
-                  </span></div>
+                <div class='flex flex-col'>
+                  <span class='font-semibold'>
+                    Profile: <%= link_to current_user.username.upcase_first,user_path(current_user)%>
+                  </span>
+                  <span class='font-semibold'>
+                    Edit: <%= link_to current_user.username.upcase_first,edit_user_registration_path%>
+                  </span>
+                </div>
 
     </div>
 
@@ -59,11 +64,34 @@
         <i id="notification-icon" data-action="click->notification#foo"
           class="fa fa-bell text-2xl cursor-pointer text-neutral-800/30 hover:text-gray-500"></i>
         <i
-          class="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-600 text-white text-xs rounded-full px-1">1</i>
+          class="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-600 text-white text-xs rounded-full px-1">
+          <%= current_user.notifications.all.count %>
+        </i>
 
         <div id="notification-box" data-notification-target="notificationBox"
-          class="hidden  absolute w-72 top-10 right-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-          <p>No new notifications!</p>
+          class="hidden  absolute w-72 h-80 overflow-y-scroll top-10 right-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+          <span class="font-semibold text-xl">Notifications</span>
+          <div id="notification-list" class="divide-y divide-solid flex flex-col">
+            <% if current_user.notifications.any? %>
+              <% current_user.notifications.order(created_at: :desc).each do |notification| %>
+                <div class="notification-item <%= notification.status == 'unread' ? 'bg-red-200/20 my-2 rounded-lg p-2' : 'bg-white' %>
+                  py-2">
+                  <p class="font-semibold">
+                    <%= notification.actor.username %>
+                  </p>
+                  <p class="text-gray-600 text-xs font-semibold">
+                    <%= notification.action %> <!-- Customize this based on how you want to show the action -->
+                  </p>
+                  <p class="text-xs text-gray-400">
+                    <%= time_ago_in_words(notification.created_at) %> ago
+                  </p>
+                </div>
+
+                <% end %>
+                  <% else %>
+                    <p>No new notifications!</p>
+                    <% end %>
+          </div>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  resources :users
+  resources :users, only: [ :show ]
   resources :articles do
     resources :comments # , only: [ :create, :edit, :update, :show, :destory ]
   end
@@ -12,6 +12,12 @@ Rails.application.routes.draw do
       match "unlike", to: "reactions#unlike", via: [ :delete, :post ] # Accepts both DELETE and POST
     end
   end
+
+  namespace :admin do
+    resources :users, only: [ :index, :show, :create, :update, :destroy ]
+    post "login", to: "sessions#create"
+  end
+
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

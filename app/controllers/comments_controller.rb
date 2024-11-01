@@ -1,50 +1,34 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!, only: [ :create, :edit, :update, :destroy ]
   before_action :set_comment, except: [ :new, :create ]
-  def show
-  end
-  def update
-      if @comment.update(comment_params)
-        respond_to do |format|
-          format.html { redirect_to @article }
-          format.json { render json: @comment }
-          format.turbo_stream
-        end
-      else
-        render :edit
-      end
-    # @article = Article.find(params[:article_id])
-    # @comment = @article.comments.find(params[:id])
-    # if @comment.update(comment_params)
-    #   redirect_to @article, notice: "Comment was successfully updated."
-    # else
-    #   render :edit
-    # end
-  end
 
   def create
+    # i tried to move this but that caused unexpected issues
+    # will resolve it
     @article = Article.find(params[:article_id])
     @comment = @article.comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
-      notification = Notification.build(
-       user: @comment.article.user,
-       actor: current_user,
-       notifiable: @comment,
-       action: :commented
-     )
-     notification.save
-
-      # Notification.create_notification(@comment.article.user, current_user, @comment, :commented)
+      create_notification(@comment)
       redirect_to @article, notice: "Comment was successfully created."
     else
       redirect_to @article, alert: "Error creating comment."
     end
   end
 
+  def update
+    puts "=========================================="
+    if @comment.update(comment_params)
+        respond_to do |format|
+          format.html { redirect_to @article }
+          format.turbo_stream
+        end
+    else
+        render :edit
+    end
+  end
+
   def destroy
-    @article = Article.find(params[:article_id])
-    @comment = @article.comments.find(params[:id])
     if @comment.user == current_user
       @comment.destroy
       flash[:alert] = "Comment is deleted"
@@ -52,7 +36,11 @@ class CommentsController < ApplicationController
     end
   end
 
+  def show
+  end
+
   def edit
+    byebug
   end
 
   private
@@ -62,5 +50,15 @@ class CommentsController < ApplicationController
     end
     def comment_params
       params.require(:comment).permit(:content)
+    end
+    def create_notification(comment)
+      notification = Notification.build(
+        user: comment.article.user,
+        actor: current_user,
+        notifiable: comment,
+        action: :commented,
+        status: :unread
+      )
+      notification.save
     end
 end

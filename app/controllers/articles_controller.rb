@@ -13,12 +13,7 @@ class ArticlesController < ApplicationController
     def create
       @article = current_user.articles.build(article_params)
       if @article.save
-        @article.collaborations.create(user: current_user, role: :owner)
-        if params[:co_authors].present? && params[:co_authors].is_a?(Array)
-          params[:co_authors].each do |co_author_id| 
-            @article.collaborations.create(user_id: co_author_id, role: :co_author)
-          end
-        end
+        make_collabs(@article, params[:co_authors])
         redirect_to @article, notice: "Article was successfully created."
       else
         render :new
@@ -53,7 +48,15 @@ class ArticlesController < ApplicationController
     def article_params
       params.require(:article).permit(:title, :body)
     end
-
+    def make_collabs(article, co_authors)
+      # this is just to create a default colab for the owner as an owner
+      article.collaborations.create(user: current_user, role: :owner)
+      if co_authors.present? && co_authors.is_a?(Array)
+        co_authors.each do |co_author_id|
+          article.collaborations.create(user_id: co_author_id, role: :co_author)
+        end
+      end
+    end
     def add_article
       @article = Article.find(params[:id])
     end

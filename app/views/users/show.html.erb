@@ -1,2 +1,60 @@
-<h1><%= @user.username %>'s Profile</h1>
-<p>Email: <%= @user.email %></p>
+<div class="max-w-2xl h-full p-2">
+    <div class="bg-white p-4 flex flex-col gap-2">
+        <div class="flex space-x-2 items-center">
+            <div class="flex-shrink-0">
+                <%= image_tag @user.avatar.attached? ? @user.avatar.variant(resize_to_fill: [100, 100])
+                    : 'default-avatar.png' , class: 'rounded-full h-16 w-16' %>
+            </div>
+            <div class="text-base">
+                <h1 class="text-base font-semibold text-gray-800">
+                    <%= @user.username %>
+                </h1>
+                <p class="text-base text-gray-600">
+                    <%= @user.email %>
+                </p>
+                <p class="text-gray-600">Role: <%= @user.role.capitalize %>
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold text-gray-800">Articles</h2>
+            <% if @user.articles.any? %>
+                <ul class="list-disc pl-5 mt-2">
+                    <% @user.articles.each do |article| %>
+                        <li>
+                            <%= link_to article.title, article_path(article), class: 'text-blue-600 hover:underline' %>
+                        </li>
+                        <% end %>
+                </ul>
+                <% else %>
+                    <p class="text-gray-500">No articles found.</p>
+                    <% end %>
+        </div>
+
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold text-gray-800">Comments</h2>
+            <% if @user.comments.any? %>
+                <ul class="list-disc pl-5 mt-2">
+                    <% @user.comments.each do |comment| %>
+                        <li class="text-gray-700">
+                            <p>
+                                <%= comment.content %>
+                            </p>
+                            <p class="text-gray-500 text-sm">On: <%= link_to comment.article.title,
+                                    article_path(comment.article), class: 'text-blue-600 hover:underline' %>
+                            </p>
+                        </li>
+                        <% end %>
+                </ul>
+                <% else %>
+                    <p class="text-gray-500">No comments found.</p>
+                    <% end %>
+        </div>
+
+        <div class="mt-6">
+            <%= link_to 'Edit Profile' , edit_user_registration_path,
+                class: 'inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600' %>
+        </div>
+    </div>
+</div>

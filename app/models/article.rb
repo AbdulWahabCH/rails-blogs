@@ -11,7 +11,9 @@ class Article < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
 
-  scope :posted_in_last_24_hours, -> { where("created_at >= ?", 24.hours.ago) }
+  scope :posted_in_last_24_hours, -> { where(created_at: 24.hours.ago..) }
+  scope :search_by_title, ->(query) { where("lower(title) LIKE ?", "%#{query.downcase}%") }
+
   def reaction_count(type)
     reactions.where(reaction_type: type).count
   end

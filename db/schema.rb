@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_05_142038) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -83,6 +83,17 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.integer "payer_id", null: false
+    t.integer "payee_id", null: false
+    t.integer "amount"
+    t.string "stripe_charge_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payee_id"], name: "index_payments_on_payee_id"
+    t.index ["payer_id"], name: "index_payments_on_payer_id"
+  end
+
   create_table "reactions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "reactable_type", null: false
@@ -116,11 +127,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "articles", "users"
+  add_foreign_key "articles", "users", on_delete: :cascade
   add_foreign_key "collaborations", "articles"
-  add_foreign_key "collaborations", "users"
+  add_foreign_key "collaborations", "users", on_delete: :cascade
   add_foreign_key "comments", "articles"
-  add_foreign_key "comments", "users"
-  add_foreign_key "notifications", "users"
-  add_foreign_key "reactions", "users"
+  add_foreign_key "comments", "users", on_delete: :cascade
+  add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "payments", "users", column: "payee_id", on_delete: :cascade
+  add_foreign_key "payments", "users", column: "payer_id", on_delete: :cascade
+  add_foreign_key "reactions", "users", on_delete: :cascade
 end

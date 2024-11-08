@@ -45,6 +45,11 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    active_model_serializers (0.10.14)
+      actionpack (>= 4.1)
+      activemodel (>= 4.1)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     activejob (7.2.1.1)
       activesupport (= 7.2.1.1)
       globalid (>= 0.3.6)
@@ -110,6 +115,8 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    case_transform (0.2)
+      activesupport
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
@@ -166,6 +173,7 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.7.2)
+    jsonapi-renderer (0.2.2)
     jwt (2.9.3)
       base64
     language_server-protocol (3.17.0.3)
@@ -228,6 +236,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.10)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
@@ -317,6 +327,8 @@ GEM
       rubocop-minitest
       rubocop-performance
       rubocop-rails
+    rubocop-rspec (3.1.0)
+      rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
@@ -412,6 +424,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  active_model_serializers
   aws-sdk-s3
   bcrypt (~> 3.1.7)
   bootsnap
@@ -432,11 +445,14 @@ DEPENDENCIES
   mail (~> 2.8)
   pg
   puma (>= 5.0)
+  rack-cors
   rails (~> 7.2.1)
   redis (>= 4.0.1)
   resque (~> 2.6)
+  rubocop
   rubocop-rails
   rubocop-rails-omakase
+  rubocop-rspec
   ruby-vips (~> 2.2)
   selenium-webdriver
   sprockets-rails

@@ -3,13 +3,22 @@ class ArticlesController < ApplicationController
     before_action :add_article, only: [ :edit, :show, :destroy, :update ]
 
     def index
-      @articles = Article.all.order(created_at: :desc)
+      if params[:query].present?
+        # Search for articles by title using the search scope
+        @articles = Article.search_by_title(params[:query])
+      else
+        @articles = Article.all.order(created_at: :desc)
+      end
     end
 
+    def show
+    end
     def new
       @article = Article.new
     end
 
+    def edit
+    end
     def create
       @article = current_user.articles.build(article_params)
       if @article.save
@@ -20,8 +29,6 @@ class ArticlesController < ApplicationController
       end
     end
 
-    def show
-    end
 
     def update
       if @article.update(article_params)
@@ -31,8 +38,6 @@ class ArticlesController < ApplicationController
       end
     end
 
-    def edit
-    end
 
     def destroy
         if @article.user == current_user

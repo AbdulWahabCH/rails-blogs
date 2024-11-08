@@ -115,15 +115,17 @@
 
   </nav>
   <main class="container mx-auto  ">
-    <div id="flash-messages" class="transition-opacity duration-700 ease-in-out opacity-0">
-      <p class="notice">
+    <div id="flash-messages" data-controller="flash-messages" data-flash-messages-target="flashMessages"
+      class="transition-opacity duration-700 ease-in-out opacity-0 hidden">
+      <p data-flash-messages-target="notice" class="notice hidden">
         <%= notice %>
       </p>
 
-      <p class="alert">
+      <p data-flash-messages-target="alert" class="alert hidden">
         <%= alert %>
       </p>
     </div>
+
     <%= yield %>
   </main>
 </body>

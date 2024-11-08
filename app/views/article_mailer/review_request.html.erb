@@ -1,0 +1,15 @@
+<h1>Dear <%= @user.username %>,</h1>
+
+<p>You have received a request to review your article titled "<%= @article.title %>".</p>
+
+<p>
+    <%= @message %>
+</p>
+
+<p>Please make the necessary changes and review your article on the following link:</p>
+
+<p>
+    <%= link_to 'View Article' , @article_url %>
+</p>
+
+<p>Thank you!</p>

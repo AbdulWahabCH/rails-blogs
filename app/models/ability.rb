@@ -30,7 +30,7 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/define_check_abilities.md
 
     can :read, Article
-    if user.persisted? # If the user is logged in
+    return unless user.persisted? # If the user is logged in
       can :create, Article, user: user # Logged in users can create articles
 
       can :manage, Article, user_id: user.id
@@ -38,6 +38,5 @@ class Ability
       can :edit, Article do |article|
         article.collaborators.include?(user)
       end
-    end
   end
 end

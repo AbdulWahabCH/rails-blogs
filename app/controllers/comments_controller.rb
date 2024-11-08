@@ -2,6 +2,11 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!, only: [ :create, :edit, :update, :destroy ]
   before_action :set_comment, except: [ :new, :create ]
 
+  def show
+  end
+  def edit
+    byebug
+  end
   def create
     # i tried to move this but that caused unexpected issues
     # will resolve it
@@ -36,12 +41,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  def show
-  end
 
-  def edit
-    byebug
-  end
 
   private
     def set_comment

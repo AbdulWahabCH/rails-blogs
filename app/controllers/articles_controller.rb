@@ -1,11 +1,13 @@
 class ArticlesController < ApplicationController
+  include EmbeddingConcern
     before_action :authenticate_user!, only: [ :create, :edit, :new, :destroy, :update ]
     before_action :add_article, only: [ :edit, :show, :destroy, :update ]
 
+
     def index
       if params[:query].present?
-        # Search for articles by title using the search scope
-        @articles = Article.search_by_title(params[:query])
+        query_embedding = generate_embeddings(params[:query])
+        @articles =  Article.order(Arel.sql("embeddings <=> '#{query_embedding}'")).limit(2)
       else
         @articles = Article.all.order(created_at: :desc)
       end
@@ -13,6 +15,7 @@ class ArticlesController < ApplicationController
 
     def show
     end
+
     def new
       @article = Article.new
     end
@@ -21,6 +24,7 @@ class ArticlesController < ApplicationController
     end
     def create
       @article = current_user.articles.build(article_params)
+      @article.embeddings = generate_embeddings(@article.body)
       if @article.save
         make_collabs(@article, params[:co_authors])
         redirect_to @article, notice: "Article was successfully created."

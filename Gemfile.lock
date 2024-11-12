@@ -201,6 +201,8 @@ GEM
     multi_json (1.15.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
+    neighbor (0.5.0)
+      activerecord (>= 7)
     net-imap (0.4.17)
       date
       net-protocol
@@ -223,12 +225,16 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
+    numo-narray (0.9.2.1)
+    open3 (0.2.1)
+    openai (0.3.0)
     orm_adapter (0.5.0)
     parallel (1.26.3)
     parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.8)
+    pgvector (0.3.2)
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
@@ -443,7 +449,12 @@ DEPENDENCIES
   jwt
   letter_opener
   mail (~> 2.8)
+  neighbor (~> 0.5.0)
+  numo-narray (~> 0.9.2.1)
+  open3 (~> 0.2.1)
+  openai
   pg
+  pgvector
   puma (>= 5.0)
   rack-cors
   rails (~> 7.2.1)

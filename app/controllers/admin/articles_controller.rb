@@ -1,12 +1,12 @@
 # app/controllers/admin/articles_controller.rb
 class Admin::ArticlesController < Admin::BaseController
     before_action :set_article, only: [ :show, :update, :destroy, :send_warning ]
-    skip_before_action :verify_authenticity_token, only: [ :send_warning ]
+    skip_before_action :verify_authenticity_token, only: [ :send_warning, :destroy ]
 
 
     # GET /admin/articles
     def index
-      articles = Article.all
+      articles = Article.all.order(created_at: :desc)
       render json: articles, each_serializer: ArticleSerializer, status: :ok
     end
 

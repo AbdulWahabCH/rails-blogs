@@ -23,7 +23,7 @@
 
 
 <div class="block">
-  <% if @articles.any? %>
+  <% if @articles.present? %>
     <ul class='my-2'>
       <% @articles.each do |article| %>
         <li class='shadow-sm shadow-inner border-b-2 border-black-100 rounded-md p-6 m-2'>

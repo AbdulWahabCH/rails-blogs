@@ -17,11 +17,11 @@ class AddOnDeleteCascadeToUserForeignKeys < ActiveRecord::Migration[7.2]
     add_foreign_key :notifications, :users, on_delete: :cascade
 
     # Payments (payer_id, payee_id)
-    remove_foreign_key :payments, :users, column: :payer_id
-    add_foreign_key :payments, :users, column: :payer_id, on_delete: :cascade
+    # remove_foreign_key :payments, :users, column: :payer_id
+    # add_foreign_key :payments, :users, column: :payer_id, on_delete: :cascade
 
-    remove_foreign_key :payments, :users, column: :payee_id
-    add_foreign_key :payments, :users, column: :payee_id, on_delete: :cascade
+    # remove_foreign_key :payments, :users, column: :payee_id
+    # add_foreign_key :payments, :users, column: :payee_id, on_delete: :cascade
 
     # Reactions
     remove_foreign_key :reactions, :users

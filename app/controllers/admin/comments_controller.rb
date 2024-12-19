@@ -45,6 +45,6 @@ class Admin::CommentsController < Admin::BaseController
     end
 
     def comment_params
-      params.require(:comment).permit(:body, :article_id, :user_id) # Adjust based on your Comment model attributes
+      params.require(:comment).permit(:body, :article_id, :user_id)
     end
 end

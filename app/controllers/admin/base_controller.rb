@@ -17,6 +17,7 @@ class Admin::BaseController < ApplicationController
             render json: { error: "Missing token" }, status: :unauthorized
         end
     end
+
     def authorize_admin!
       render json: { error: "Unauthorized" }, status: :forbidden unless @current_user&.admin?
     end

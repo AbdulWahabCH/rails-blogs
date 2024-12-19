@@ -8,115 +8,97 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+  <%= csp_meta_tag %>
 
-      <%= yield :head %>
-        <script>
-          window.App = {
-            user: {
-              signedIn: ' <%= user_signed_in? %>',
-              _id: "<%= current_user.id if user_signed_in? %>"
-            }
-          };
-        </script>
+  <%= yield :head %>
+  
+  <script>
+    window.App = {
+      user: {
+        signedIn: '<%= user_signed_in? %>',
+        _id: "<%= current_user.id if user_signed_in? %>"
+      }
+    };
+  </script>
 
-        <link rel="manifest" href="/manifest.json">
-        <link rel="icon" href="/icon.png" type="image/png">
-        <link rel="icon" href="/icon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.png">
 
-        <%= stylesheet_link_tag "tailwind" , "inter-font" , "data-turbo-track"=> "reload" %>
-          <%= stylesheet_link_tag "application" , "data-turbo-track"=> "reload" %>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track" => "reload" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track" => "reload" %>
 
-            <%= javascript_importmap_tags%>
-              <link rel="stylesheet"
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+  <%= javascript_importmap_tags %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
   <nav class='mx-4 my-6 px-2 flex justify-between items-center'>
     <div class="flex gap-2 items-center">
-      <%if user_signed_in?%>
+      <% if user_signed_in? %>
 
         <% if current_user.avatar.attached? %>
-          <%= image_tag current_user.avatar.variant(resize_to_fill: [100, 100]) , class: "rounded-lg" %>
+          <%= image_tag current_user.avatar.variant(resize_to_fill: [100, 100]), class: "rounded-lg" %>
+        <% else %>
+          <p>Nothing</p>
+        <% end %>
 
-            <% else %>
-              <p>Nothing</p>
-              <% end %>
+        <div class='flex flex-col'>
+          <span class='font-semibold'>
+            Profile: <%= link_to current_user.username.upcase_first, user_path(current_user) %>
+          </span>
+          <span class='font-semibold'>
+            Edit: <%= link_to current_user.username.upcase_first, edit_user_registration_path %>
+          </span>
+        </div>
+      </div>
 
+      <div class="flex flex-row gap-6 items-center place-items-center">
+        <div class="relative" data-controller="notification">
+          <i id="notification-icon" data-action="click->notification#foo" class="fa fa-bell text-2xl cursor-pointer text-neutral-800/30 hover:text-gray-500"></i>
+          <i class="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-600 text-white text-xs rounded-full px-1">
+            <%= current_user.notifications.all.count %>
+          </i>
 
-                <div class='flex flex-col'>
-                  <span class='font-semibold'>
-                    Profile: <%= link_to current_user.username.upcase_first,user_path(current_user)%>
-                  </span>
-                  <span class='font-semibold'>
-                    Edit: <%= link_to current_user.username.upcase_first,edit_user_registration_path%>
-                  </span>
-                </div>
-
-    </div>
-
-    <div class="flex flex-row gap-6 items-center place-items-center">
-      <div class="relative" data-controller="notification">
-        <i id="notification-icon" data-action="click->notification#foo"
-          class="fa fa-bell text-2xl cursor-pointer text-neutral-800/30 hover:text-gray-500"></i>
-        <i
-          class="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-600 text-white text-xs rounded-full px-1">
-          <%= current_user.notifications.all.count %>
-        </i>
-
-        <div id="notification-box" data-notification-target="notificationBox"
-          class="hidden  absolute w-72 h-80 overflow-y-scroll top-10 right-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-          <span class="font-semibold text-xl">Notifications</span>
-          <div id="notification-list" class="divide-y divide-solid flex flex-col">
-            <% if current_user.notifications.any? %>
-              <% current_user.notifications.order(created_at: :desc).each do |notification| %>
-                <div class="notification-item <%= notification.status == 'unread' ? 'bg-red-200/20 my-2 rounded-lg p-2' : 'bg-white' %>
-                  py-2">
-                  <p class="font-semibold">
-                    <%= notification.actor.username %>
-                  </p>
-                  <p class="text-gray-600 text-xs font-semibold">
-                    <%= notification.action %> <!-- Customize this based on how you want to show the action -->
-                  </p>
-                  <p class="text-xs text-gray-400">
-                    <%= time_ago_in_words(notification.created_at) %> ago
-                  </p>
-                </div>
-
+          <div id="notification-box" data-notification-target="notificationBox" class="hidden absolute w-72 h-80 overflow-y-scroll top-10 right-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+            <span class="font-semibold text-xl">Notifications</span>
+            <div id="notification-list" class="divide-y divide-solid flex flex-col">
+              <% if current_user.notifications.any? %>
+                <% current_user.notifications.order(created_at: :desc).each do |notification| %>
+                  <div class="notification-item <%= notification.status == 'unread' ? 'bg-red-200/20 my-2 rounded-lg p-2' : 'bg-white' %> py-2">
+                    <p class="font-semibold">
+                      <%= notification.actor.username %>
+                    </p>
+                    <p class="text-gray-600 text-xs font-semibold">
+                      <%= notification.action %> <!-- Customize this based on how you want to show the action -->
+                    </p>
+                    <p class="text-xs text-gray-400">
+                      <%= time_ago_in_words(notification.created_at) %> ago
+                    </p>
+                  </div>
                 <% end %>
-                  <% else %>
-                    <p>No new notifications!</p>
-                    <% end %>
+              <% else %>
+                <p>No new notifications!</p>
+              <% end %>
+            </div>
           </div>
         </div>
+
+        <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'px-4 py-2 h-10 bg-red-500 text-white rounded hover:bg-red-600' %>
       </div>
-
-      <%= button_to 'Logout' , destroy_user_session_path, method: :delete,
-        class: 'px-4 py-2 h-10 bg-red-500 text-white rounded hover:bg-red-600' %>
-
-    </div>
-    <%else%>
+    <% else %>
       <div class='flex justify-end gap-x-2'>
-
         <div>
-
-          <%= link_to 'Sign In' , new_user_session_path,
-            class: 'text-black px-4 py-2 border border-neutral-400 rounded-md' %>
-            <%= link_to 'Sign Up' , new_user_registration_path,
-              class: 'px-4 py-2 text-white bg-black rounded-md border border-neutral-600' %>
-
+          <%= link_to 'Sign In', new_user_session_path, class: 'text-black px-4 py-2 border border-neutral-400 rounded-md' %>
+          <%= link_to 'Sign Up', new_user_registration_path, class: 'px-4 py-2 text-white bg-black rounded-md border border-neutral-600' %>
         </div>
       </div>
-      <%end%>
-
+    <% end %>
   </nav>
-  <main class="container mx-auto  ">
-    <div id="flash-messages" data-controller="flash-messages" data-flash-messages-target="flashMessages"
-      class="transition-opacity duration-700 ease-in-out opacity-0 hidden">
+
+  <main class="container mx-auto">
+    <div id="flash-messages" data-controller="flash-messages" data-flash-messages-target="flashMessages" class="transition-opacity duration-700 ease-in-out opacity-0 hidden">
       <p data-flash-messages-target="notice" class="notice hidden">
         <%= notice %>
       </p>

@@ -22,6 +22,7 @@ class ArticlesController < ApplicationController
 
     def edit
     end
+
     def create
       @article = current_user.articles.build(article_params)
       @article.embeddings = generate_embeddings(@article.body)
@@ -57,8 +58,8 @@ class ArticlesController < ApplicationController
     def article_params
       params.require(:article).permit(:title, :body)
     end
+
     def make_collabs(article, co_authors)
-      # this is just to create a default colab for the owner as an owner
       article.collaborations.create(user: current_user, role: :owner)
       if co_authors.present? && co_authors.is_a?(Array)
         co_authors.each do |co_author_id|
@@ -66,6 +67,7 @@ class ArticlesController < ApplicationController
         end
       end
     end
+
     def add_article
       @article = Article.find(params[:id])
     end

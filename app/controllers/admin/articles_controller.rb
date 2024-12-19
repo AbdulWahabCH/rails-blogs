@@ -34,7 +34,6 @@ class Admin::ArticlesController < Admin::BaseController
       message = params[:message]
       warning_type = params[:warning_type]
 
-      # Validate the parameters
       if message.blank? || warning_type.blank?
         render json: { error: "Message and warning type are required." }, status: :unprocessable_entity
         return
@@ -52,10 +51,6 @@ class Admin::ArticlesController < Admin::BaseController
     end
 
     def article_params
-      params.require(:article).permit(:title, :body, :user_id) # Adjust based on your Article model attributes
+      params.require(:article).permit(:title, :body, :user_id)
     end
-
-  # def warning_params
-  #   params.require()
-  # end
 end

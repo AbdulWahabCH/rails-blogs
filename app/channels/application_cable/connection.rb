@@ -6,7 +6,6 @@ module ApplicationCable
 
     def connect
       self.current_user = find_verified_user
-      puts "Connection established for user: #{current_user.nil? ? 'nil' : current_user.email}"
     end
 
     protected
@@ -16,12 +15,10 @@ module ApplicationCable
       if user_id.present?
         user = User.find_by(id: user_id)
         if user
-          puts "User signed in: --------------------- #{user.email}"
           return user
         end
       end
-
-      puts "User NOT signed in or user not found"
+      # This rejects unauthorized user access
       reject_unauthorized_connection
     end
   end

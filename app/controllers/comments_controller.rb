@@ -41,23 +41,23 @@ class CommentsController < ApplicationController
 
   private
 
-    def set_comment
-      @article = Article.find(params[:article_id])
-      @comment = @article.comments.find(params[:id])
-    end
+  def set_comment
+    @article = Article.find(params[:article_id])
+    @comment = @article.comments.find(params[:id])
+  end
 
-    def comment_params
-      params.require(:comment).permit(:content)
-    end
-    
-    def create_notification(comment)
-      notification = Notification.build(
-        user: comment.article.user,
-        actor: current_user,
-        notifiable: comment,
-        action: :commented,
-        status: :unread
-      )
-      notification.save
-    end
+  def comment_params
+    params.require(:comment).permit(:content)
+  end
+  
+  def create_notification(comment)
+    notification = Notification.build(
+      user: comment.article.user,
+      actor: current_user,
+      notifiable: comment,
+      action: :commented,
+      status: :unread
+    )
+    notification.save
+  end
 end

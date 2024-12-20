@@ -28,7 +28,7 @@
 /tmp/storage/*
 !/tmp/storage/
 !/tmp/storage/.keep
-
+node_modules
 /public/assets
 
 
@@ -37,6 +37,8 @@ cron_log.log
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 /config/credentials.yml.enc
+
+dump.rdb
 
 /app/assets/builds/*
 !/app/assets/builds/.keep

@@ -1,22 +1,28 @@
-<div class='flex justify-between m-4'>
-
+<div class='flex justify-between items-center m-4'>
   <h1 class='text-3xl'>Your Articles</h1>
-  <%if current_user%>
-    <div>
-      <%= link_to 'New Article' , new_article_path,
-        class: "btn btn-primary outline outline-black-100 text-center w-[60%] p-2 rounded-md hover:outline-black-500 hover:bg-black-100"
-        %>
+
+  <% if current_user %>
+    <div class="flex items-center gap-2">
+      <%= link_to 'New Article', new_article_path,
+          class: "btn btn-primary outline outline-black-100 text-center w-auto p-2 rounded-md hover:outline-black-500 hover:bg-black-100" %>
     </div>
-    <%end%>
+  <% end %>
+
+  <div class="flex flex-col gap-2 justify-center items-end">
+    <%= form_tag(articles_path, method: :get, class: "flex items-center gap-2") do %>
+      <%= label_tag :query, "Search by title", class: "font-bold text-lg" %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search articles",
+          class: "p-2 h-10 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      <%= submit_tag "Search", class: "btn btn-primary p-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white" %>
+    <% end %>
+  </div>
 </div>
 
-
-<div class=block>
-
-  <% if @articles.any? %>
+<div class="block">
+  <% if @articles.present? %>
     <ul class='my-2'>
       <% @articles.each do |article| %>
-        <li class='shadow-sm shadow-inner  border-b-2 border-black-100 rounded-md p-6 m-2 '>
+        <li class='shadow-sm shadow-inner border-b-2 border-black-100 rounded-md p-6 m-2'>
           <strong class='text-2xl'>
             <%= link_to truncate(article.title, length: 70), article_path(article) %>
           </strong>
@@ -24,18 +30,16 @@
             <%= truncate(article.body, length: 400) %>
           </p>
           <div class='flex pt-2 gap-x-4 opacity-50'>
-            <div class='font-bold'>By <%= article.user.username.upcase_first%>
+            <div class='font-bold'>By <%= article.user.username.capitalize %></div>
+            <div class='font-medium italic'>
+              <span class='non-italic'>Created:</span>
+              <%= time_ago_in_words(article.created_at) %> ago
             </div>
-            <div class='font-medium italic'><span class='non-italic'>Created</span>: <%=
-                time_ago_in_words(article.created_at) %> ago</div>
-
           </div>
         </li>
-
-
-        <% end %>
-    </ul>
-    <% else %>
-      <p>You have no articles yet.</p>
       <% end %>
+    </ul>
+  <% else %>
+    <p>You have no articles yet.</p>
+  <% end %>
 </div>

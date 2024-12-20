@@ -1,18 +1,18 @@
-<div class='w-full mx-auto'>
-  <div class='mx-10'>
+<div class="w-full mx-auto">
+  <div class="mx-10">
     <h1 class="text-3xl font-bold mb-4">
       <%= @article.title.upcase_first %>
     </h1>
 
-    <div class='flex gap-4 my-4 justify-between items-center'>
+    <div class="flex gap-4 my-4 justify-between items-center">
       <div class="flex gap-x-6 justify-between items-center">
-        <div class="relative flex ">
+        <div class="relative flex">
           <% @article.collaborations.each_with_index do |collab, index| %>
             <% if collab.user.avatar.attached? %>
               <%= image_tag collab.user.avatar.variant(resize_to_fill: [50, 50]),
-                class: "rounded-full shadow-lg -mr-4 border-2 border-neutral-500/50" %>
-                <% end %>
-                  <%end%>
+                  class: "rounded-full shadow-lg -mr-4 border-2 border-neutral-500/50" %>
+            <% end %>
+          <% end %>
         </div>
         <div class="flex flex-col text-xs italic justify-start">
           <span class="opacity-50">Created At:
@@ -25,84 +25,78 @@
       </div>
 
       <% if user_signed_in? %>
-        <div id="reaction_status" class="flex flex-row gap-x-2 ">
-          <div class="flex flex-row ">
-            <% if @article.reactions.where(user: current_user, reaction_type: 'like' ).exists? %>
+        <div id="reaction_status" class="flex flex-row gap-x-2">
+          <div class="flex flex-row">
+            <% if @article.reactions.where(user: current_user, reaction_type: 'like').exists? %>
               <div class="flex flex-col liked gap-2">
-                <%= link_to 'UnLike' , unlike_reactions_path(reactable_type: 'Article' , reactable_id: @article.id),
-                  data: { turbo_method: :delete }, class: 'unlike_button' %>
+                <%= link_to 'UnLike', unlike_reactions_path(reactable_type: 'Article', reactable_id: @article.id),
+                    data: { turbo_method: :delete }, class: 'unlike_button' %>
               </div>
-              <% elsif @article.reactions.where(user: current_user, reaction_type: 'unlike' ).exists? %>
-                <div class="flex flex-col gap-2 disliked">
-                  <%= link_to 'Like' , like_reactions_path(reactable_type: 'Article' , reactable_id: @article.id), data:
-                    { turbo_method: :post }, class: 'like_button' %>
+            <% elsif @article.reactions.where(user: current_user, reaction_type: 'unlike').exists? %>
+              <div class="flex flex-col gap-2 disliked">
+                <%= link_to 'Like', like_reactions_path(reactable_type: 'Article', reactable_id: @article.id),
+                    data: { turbo_method: :post }, class: 'like_button' %>
+              </div>
+            <% else %>
+              <div class="flex flex-row gap-x-2">
+                <div class="cursor-pointer hover:text-green-900">
+                  <%= link_to 'Like', like_reactions_path(reactable_type: 'Article', reactable_id: @article.id),
+                      data: { turbo_method: :post }, class: 'like_button' %>
                 </div>
-                <% else %>
-                  <div class="flex flex-row gap-x-2 ">
-                    <div class="cursor-pointer hover:text-green-900	">
-                      <%= link_to 'Like' , like_reactions_path(reactable_type: 'Article' , reactable_id: @article.id),
-                        data: { turbo_method: :post }, class: 'like_button' %>
-                    </div>
-                    <span> : </span>
-                    <div class="cursor-pointer">
-                      <%= link_to 'Unlike' , unlike_reactions_path(reactable_type: 'Article' , reactable_id:
-                        @article.id), data: { turbo_method: :post }, class: 'unlike_button' %>
-                    </div>
-                  </div>
-                  <% end %>
+                <span>: </span>
+                <div class="cursor-pointer">
+                  <%= link_to 'Unlike', unlike_reactions_path(reactable_type: 'Article', reactable_id: @article.id),
+                      data: { turbo_method: :post }, class: 'unlike_button' %>
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
-        <%else%>
-          <div class="flex flex-row gap-2">
-            <%= @article.reactions.where(reaction_type: 'like' ).count %> people liked
-              <span> : </span>
-              <%= @article.reactions.where(reaction_type: 'unlike' ).count %> people unliked
-
-          </div>
-          <%end%>
-
-
+      <% else %>
+        <div class="flex flex-row gap-2">
+          <%= @article.reactions.where(reaction_type: 'like').count %> people liked
+          <span>: </span>
+          <%= @article.reactions.where(reaction_type: 'unlike').count %> people unliked
+        </div>
+      <% end %>
     </div>
 
-    <div class="mb-6 ">
+    <div class="mb-6">
       <p class="text-gray-700 text-justify">
         <%= @article.body.upcase_first %>
       </p>
     </div>
-    <div class='flex flex-col gap-y-2'>
-      <% if @article.comments.any? %>
-        <h2 class='text-2xl font-semibold'>Comments: <%= @article.comments.count %>
-        </h2>
-        <% end %>
 
-          <div class="bg-neutral-100/50 p-4 rounded-md">
-            <% @article.comments.each do |comment| %>
-              <%= render partial: 'comment' , locals: { article: @article, comment: comment } %>
-                <% end %>
-          </div>
+    <div class="flex flex-col gap-y-2">
+      <% if @article.comments.any? %>
+        <h2 class="text-2xl font-semibold">Comments: <%= @article.comments.count %></h2>
+      <% end %>
+
+      <div class="bg-neutral-100/50 p-4 rounded-md">
+        <% @article.comments.each do |comment| %>
+          <%= render partial: 'comment', locals: { article: @article, comment: comment } %>
+        <% end %>
+      </div>
     </div>
 
     <% if user_signed_in? %>
-      <div class='my-2'>Make a comment:</div>
-      <%= form_with(model: [@article, Comment.new], class: 'w-[60%] gap-y-2 my-2 flex flex-col justify-end' ) do |form|
-        %>
+      <div class="my-2">Make a comment:</div>
+      <%= form_with(model: [@article, Comment.new], class: 'w-[60%] gap-y-2 my-2 flex flex-col justify-end') do |form| %>
         <%= form.text_area :content, rows: 4, class: 'rounded-lg border border-neutral-300' %>
-          <%= form.submit 'Add Comment' , class: 'cursor-pointer bg-black text-white p-2' %>
-            <% end %>
-              <% end %>
+        <%= form.submit 'Add Comment', class: 'cursor-pointer bg-black text-white p-2' %>
+      <% end %>
+    <% end %>
 
-                <div class="flex justify-stretch gap-2 w-[40%]">
-                  <%= link_to 'Back to Articles' , articles_path,
-                    class: 'px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400' %>
+    <div class="flex justify-stretch gap-2 w-[40%]">
+      <%= link_to 'Back to Articles', articles_path,
+          class: 'px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400' %>
 
-                    <% if user_signed_in? && ( @article.user==current_user || can?(:edit, @article) ) %>
-                      <%= link_to 'Edit Article' , edit_article_path(@article),
-                        class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600' %>
-                        <%= link_to 'Delete Article' , article_path(@article), data: { turbo_method: :delete,
-                          turbo_confirm: "Are you sure?" },
-                          class: 'px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600' %>
-                          <% end %>
-
-                </div>
+      <% if user_signed_in? && (@article.user == current_user || can?(:edit, @article)) %>
+        <%= link_to 'Edit Article', edit_article_path(@article),
+            class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600' %>
+        <%= link_to 'Delete Article', article_path(@article), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+            class: 'px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600' %>
+      <% end %>
+    </div>
   </div>
 </div>

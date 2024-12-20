@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :users, only: [ :index, :show, :create, :update, :destroy ]
+    resources :users, only: [ :index, :show, :update, :destroy ]
+    resources :articles do
+      post "send_warning", on: :member
+    end
+    resources :comments
     post "login", to: "sessions#create"
   end
 

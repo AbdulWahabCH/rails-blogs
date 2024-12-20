@@ -20,52 +20,23 @@ class ReactionsController < ApplicationController
       respond_to_response
   end
 
+  def unlike
+    @reaction = Reaction.find_by(user: current_user, reactable: @reactable)
 
-# def unlike
-#   @reaction = Reaction.find_by(
-#       user: current_user,
-#       reactable: find_reactable
-#     )
-
-#     if @reaction
-#       if @reaction.reaction_type == "like"
-#         @reaction.destroy
-#         flash[:notice] = "You unliked the #{@type}!"
-#       elsif @reaction.reaction_type == "unlike"
-#         flash[:alert] = "You already disliked this!"
-#       end
-#     else
-#       # If the user has not liked it yet, create a dislike
-#       Reaction.create(
-#         user: current_user,
-#         reactable: find_reactable,
-#         reaction_type: "unlike" # Register as dislike
-#       )
-#       flash[:notice] = "You disliked the #{@type}!"
-#     end
-#   respond_to do |format|
-#       format.turbo_stream
-#       format.html { redirect_back(fallback_location: root_path) }
-#     end
-#   end
-
-def unlike
-  @reaction = Reaction.find_by(user: current_user, reactable: @reactable)
-
-  if @reaction
-    handle_existing_reaction
-  else
-    create_unlike_reaction
+    if @reaction
+      handle_existing_reaction
+    else
+      create_unlike_reaction
+    end
+    respond_to_response
   end
-
-  respond_to_response
-end
 
   private
 
   def find_reactable
     params[:reactable_type].constantize.find(params[:reactable_id])
   end
+
   def get_object
     @reactable = find_reactable()
     if @reactable.is_a?(Article)
@@ -76,6 +47,7 @@ end
       @type = "Comment"
     end
   end
+  
   def respond_to_response
     respond_to do |format|
       format.turbo_stream

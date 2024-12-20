@@ -71,11 +71,21 @@ gem "dotenv-rails", groups: [ :development, :test ]
 
 gem "pg"
 
+gem "pgvector"
+# gem "ruby-openai", "~> 7.3", ">= 7.3.1"
+
+gem "neighbor", "~> 0.5.0"
+
+gem "openai"
+
 gem "rubocop-rails", require: false
 
 gem "byebug", "~> 11.1"
 
+# gem 'open4', '~> 1.3'
+gem "open3", "~> 0.2.1"
 gem "cancancan", "~> 3.6"
+gem "numo-narray", "~> 0.9.2.1"
 
 gem "font-awesome-rails", "~> 4.7"
 
@@ -85,3 +95,10 @@ gem "whenever", require: false
 gem "resque", "~> 2.6"
 
 gem "jwt"
+
+gem "rubocop", require: false
+gem "rubocop-rails", require: false
+gem "rubocop-rspec", require: false
+gem "rack-cors", require: "rack/cors"
+
+gem "active_model_serializers"

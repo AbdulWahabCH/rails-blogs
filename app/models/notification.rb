@@ -11,8 +11,6 @@ class Notification < ApplicationRecord
   enum status: { unread: 0, read: 1 }
 
   validates :action, presence: true
-  validates :notifiable, presence: true
-
   # this feature is pending
   # def self.create_notification(invited, current, notify, action_done)
   #   notification = Notification.build(

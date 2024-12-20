@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_11_142411) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "vector"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -42,15 +46,18 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
   create_table "articles", force: :cascade do |t|
     t.string "title"
     t.text "body"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.vector "embeddings", limit: 384
+    t.index ["embeddings"], name: "articles_embeddings_idx", using: :ivfflat
+    t.index ["embeddings"], name: "articles_embeddings_index", using: :ivfflat
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
   create_table "collaborations", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "article_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
     t.integer "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -60,8 +67,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
 
   create_table "comments", force: :cascade do |t|
     t.text "content"
-    t.integer "user_id", null: false
-    t.integer "article_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["article_id"], name: "index_comments_on_article_id"
@@ -69,11 +76,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "actor_type", null: false
-    t.integer "actor_id", null: false
+    t.bigint "actor_id", null: false
     t.string "notifiable_type", null: false
-    t.integer "notifiable_id", null: false
+    t.bigint "notifiable_id", null: false
     t.integer "action"
     t.integer "status"
     t.datetime "created_at", null: false
@@ -84,9 +91,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
   end
 
   create_table "reactions", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "reactable_type", null: false
-    t.integer "reactable_id", null: false
+    t.bigint "reactable_id", null: false
     t.string "reaction_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -116,11 +123,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_112446) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "articles", "users"
+  add_foreign_key "articles", "users", on_delete: :cascade
   add_foreign_key "collaborations", "articles"
-  add_foreign_key "collaborations", "users"
+  add_foreign_key "collaborations", "users", on_delete: :cascade
   add_foreign_key "comments", "articles"
-  add_foreign_key "comments", "users"
-  add_foreign_key "notifications", "users"
-  add_foreign_key "reactions", "users"
+  add_foreign_key "comments", "users", on_delete: :cascade
+  add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "reactions", "users", on_delete: :cascade
 end

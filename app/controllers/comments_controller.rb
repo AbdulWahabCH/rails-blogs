@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!, only: [ :create, :edit, :update, :destroy ]
-  before_action :set_comment, except: [ :new ]
+  before_action :set_comment, except: [ :new, :create ]
 
   def show
   end
@@ -22,12 +22,12 @@ class CommentsController < ApplicationController
 
   def update
     if @comment.update(comment_params)
-        respond_to do |format|
-          format.html { redirect_to @article }
-          format.turbo_stream
-        end
+      respond_to do |format|
+        format.html { redirect_to @article }
+        format.turbo_stream
+      end
     else
-        render :edit
+      render :edit
     end
   end
 
@@ -49,7 +49,7 @@ class CommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:content)
   end
-  
+
   def create_notification(comment)
     notification = Notification.build(
       user: comment.article.user,

@@ -42,7 +42,7 @@ class ReactionsController < ApplicationController
     if @reactable.is_a?(Article)
       @article = @reactable
       @type = "Article"
-    elsif @reactable.is_a?(Comment) # Corrected this line
+    elsif @reactable.is_a?(Comment)
       @comment = @reactable
       @type = "Comment"
     end

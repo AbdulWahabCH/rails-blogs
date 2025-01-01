@@ -26,9 +26,8 @@ class Admin::ArticlesController < Admin::BaseController
 
   def send_warning
     message = params[:message]
-    warning_type = params[:warning_type]
-
-    if message.blank? || warning_type.blank?
+    
+    if message.blank? || params[:warning_type].blank?
       render json: { error: "Message and warning type are required." }, status: :unprocessable_entity
       return
     end

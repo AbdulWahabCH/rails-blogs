@@ -35,7 +35,7 @@ class ArticlesController < ApplicationController
 
 
   def destroy
-    if @article.user == current_user
+    if @article.user.same_as_current?(current_user)
       @article.destroy
       redirect_to articles_path, notice: "Article was successfully deleted."
     else

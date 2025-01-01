@@ -1,20 +1,16 @@
-# app/controllers/admin/articles_controller.rb
 class Admin::ArticlesController < Admin::BaseController
   before_action :set_article, only: [ :show, :update, :destroy, :send_warning ]
   skip_before_action :verify_authenticity_token, only: [ :send_warning, :destroy ]
 
-  # GET /admin/articles
   def index
-    articles = Article.all.order(created_at: :desc)
-    render json: articles, each_serializer: ArticleSerializer, status: :ok
+    @articles = Article.all.order(created_at: :desc)
+    render json: @articles, each_serializer: ArticleSerializer, status: :ok
   end
 
-  # GET /admin/articles/:id
   def show
     render json: @article, serializer: ArticleSerializer, status: :ok
   end
 
-  # PATCH/PUT /admin/articles/:id
   def update
     if @article.update(article_params)
       render json: @article, status: :ok
@@ -23,7 +19,6 @@ class Admin::ArticlesController < Admin::BaseController
     end
   end
 
-  # DELETE /admin/articles/:id
   def destroy
     @article.destroy
     head :no_content
@@ -31,9 +26,8 @@ class Admin::ArticlesController < Admin::BaseController
 
   def send_warning
     message = params[:message]
-    warning_type = params[:warning_type]
-
-    if message.blank? || warning_type.blank?
+    
+    if message.blank? || params[:warning_type].blank?
       render json: { error: "Message and warning type are required." }, status: :unprocessable_entity
       return
     end

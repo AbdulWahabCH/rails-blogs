@@ -7,12 +7,12 @@ class Admin::BaseController < ApplicationController
   def authenticate_user!
     token = request.headers["Authorization"]&.split(" ")&.last
     if token
-    begin
-      payload = JWT.decode(token, Rails.application.credentials.secret_key_base).first
-      @current_user = User.find(payload["user_id"])
-    rescue JWT::DecodeError
-      render json: { error: "Unauthorized" }, status: :unauthorized
-    end
+      begin
+        payload = JWT.decode(token, Rails.application.credentials.secret_key_base).first
+        @current_user = User.find(payload["user_id"])
+      rescue JWT::DecodeError
+        render json: { error: "Unauthorized" }, status: :unauthorized
+      end
     else
       render json: { error: "Missing token" }, status: :unauthorized
     end

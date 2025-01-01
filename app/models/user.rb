@@ -26,6 +26,10 @@ class User < ApplicationRecord
       role == "admin"
     end
 
+    def same_as_current?(current_user)
+      self == current_user
+    end
+
     private
       def set_default_role
         self.role ||= :user

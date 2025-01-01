@@ -3,9 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [ :show ]
   before_action :check_current_user, only: [ :show ]
 
-  def show
-    @user = User.find(params[:id])
-  end
+  def show; end
 
   private
 
@@ -18,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def check_current_user
-    unless @user == current_user
+    unless @user.same_as_current?(current_user)
       flash[:alert] = "You are not authorized to view this profile."
       redirect_to root_path
     end

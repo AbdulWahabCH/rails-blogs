@@ -1,16 +1,9 @@
 class ArticlesController < ApplicationController
-  include EmbeddingConcern
-
   before_action :authenticate_user!, only: [ :create, :edit, :new, :destroy, :update ]
   before_action :add_article, only: [ :edit, :show, :destroy, :update ]
 
   def index
-    if params[:query].present?
-      query_embedding = generate_embeddings(params[:query])
-      @articles =  Article.order(Arel.sql("embeddings <=> '#{query_embedding}'")).limit(2)
-    else
-      @articles = Article.all.order(created_at: :desc)
-    end
+    @articles = Article.all.order(created_at: :desc)
   end
 
   def show; end
@@ -23,7 +16,6 @@ class ArticlesController < ApplicationController
 
   def create
     @article = current_user.articles.build(article_params)
-    @article.embeddings = generate_embeddings(@article.body)
     if @article.save
       make_collabs(@article, params[:co_authors])
       redirect_to @article, notice: "Article was successfully created."
@@ -43,7 +35,7 @@ class ArticlesController < ApplicationController
 
 
   def destroy
-    if @article.user == current_user
+    if @article.user.same_as_current?(current_user)
       @article.destroy
       redirect_to articles_path, notice: "Article was successfully deleted."
     else

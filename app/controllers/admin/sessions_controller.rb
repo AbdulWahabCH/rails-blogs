@@ -1,4 +1,3 @@
-# app/controllers/admin/sessions_controller.rb
 class Admin::SessionsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [ :create ]
 

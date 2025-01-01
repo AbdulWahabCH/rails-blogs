@@ -1,14 +1,14 @@
 class Admin::UsersController < Admin::BaseController
   skip_before_action :verify_authenticity_token, only: [ :destroy, :update ]
+  before_action :set_user, only: [ :show, :destroy ]
 
   def index
-    users = User.all
-    render json: users, each_serializer: UserSerializer
+    @users = User.all
+    render json: @users, each_serializer: UserSerializer
   end
 
   def show
-    user = User.find(params[:id])
-    render json: user, serializer: UserSerializer
+    render json: @user, serializer: UserSerializer
   end
 
   def update
@@ -38,12 +38,15 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def destroy
-    user = User.find(params[:id])
-    user.destroy
+    @user.destroy
     head :no_content
   end
 
   private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   def user_params
     params.require(:user).permit(:username, :email, :role, :avatar)
